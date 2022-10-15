@@ -1,24 +1,26 @@
-import logo from './logo.svg';
 import './App.css';
+import Login from './components/Login/Login'
+import {Container, Button, Flex} from './components/styles/UI'
+import { ThemeProvider } from 'styled-components'
+import { theme } from './utilities/constant'
+import { fetchapi } from './utilities/helper'
+import axios from 'axios';
 
 function App() {
+    async function getUsers () {
+    const data = await fetchapi('http://localhost:3000/users')
+    console.log(data)
+  }
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <ThemeProvider theme={theme}>
+      <Container className="App" height="100%" width="inherit">
+        {/* Login */}
+        <Flex>
+          <Login></Login>
+        </Flex>
+      </Container>
+    </ThemeProvider>
   );
 }
 
