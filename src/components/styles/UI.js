@@ -1,28 +1,48 @@
 import React from "react";
-import styled from "styled-components";
+import { Form } from "react-router-dom";
+import styled, { css } from "styled-components";
 
 export const Container = styled.div`
   margin: ${({ margin }) => margin ?? "0 auto"};
+  text-align: ${({ textAlign }) => textAlign ?? "center"};
   padding: ${({ padding }) => padding ?? "0"};
   width: ${({ width }) => width ?? "100%"};
   height: ${({ height }) => height ?? "100%"};
+  min-height: ${({ minHeight }) => minHeight ?? "100%"};
   background: ${({ background }) => background ?? "none"};
-  border-radius: ${({ borderRadius }) => borderRadius ?? "none"};
+  border-radius: ${({ borderRadius }) => borderRadius ?? "0"};
   box-shadow: ${({ theme, boxShadow }) =>
     boxShadow ? theme.boxShadow.regular : "none"};
   -webkit-box-shadow: ${({ theme, boxShadow }) =>
     boxShadow ? theme.boxShadow.regular : "none"};
   -moz-box-shadow: ${({ theme, boxShadow }) =>
     boxShadow ? theme.boxShadow.regular : "none"};
+  ${({ center }) =>
+    center
+      ? `
+    position: relative;
+    transform: translateY(-50%);
+    top: 50%;
+  `
+      : ""};
 `;
 
 export const Flex = styled(Container)`
   display: flex;
   justify-content: ${({ justifyContent }) => justifyContent ?? "center"};
-  align-items: ${({ alignItems }) => alignItems ?? "center"}; ;
+  align-items: ${({ alignItems }) => alignItems ?? "center"};
+  flex-direction: ${({ flexDirection }) => flexDirection ?? "row"};
+  ${({ center }) =>
+    center
+      ? `
+    position: relative;
+    transform: translateY(-50%);
+    top: 50%;
+  `
+      : ""};
 `;
 
-export const Form = styled.form`
+export const StyledForm = styled(Form)`
   margin: ${({ margin }) => margin ?? "0 auto"};
   padding: ${({ padding }) => padding ?? "0"};
   box-shadow: ${({ theme, boxShadow }) =>
@@ -76,6 +96,12 @@ export const Title = styled.h3`
   font-weight: light;
 `;
 
+export const Paragraph = styled.p`
+  font-size: ${({ theme }) => theme.fonts.sm};
+  margin: ${({ margin }) => margin ?? "0"};
+  font-weight: light;
+`;
+
 export const Button = styled.button`
   background: ${({ theme }) => theme.colors.primary};
   color: ${({ theme }) => theme.colors.white};
@@ -84,4 +110,29 @@ export const Button = styled.button`
   padding: 1rem 2rem;
   width: 100%;
   border-radius: 0.4rem;
+`;
+
+export const Grid = styled(Container)`
+  display: grid;
+  grid-template-columns: ${({ column }) => column ?? "1rem"};
+  grid-template-rows: ${({ row }) => row ?? "1rem"};
+`;
+
+export const Image = styled.img`
+  ${(props) => {
+    switch (props.$type) {
+      case "profile":
+        return css`
+          border-radius: 50%;
+          height: 5rem;
+          width: 5rem;
+          background: blue;
+        `;
+      default:
+        return css`
+          border-radius: ${({ borderRadius }) => borderRadius ?? "0"};
+          background: ${({ background }) => background ?? "none"};
+        `;
+    }
+  }}
 `;
