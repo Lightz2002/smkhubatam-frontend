@@ -8,7 +8,7 @@ export const Container = styled.div`
   padding: ${({ padding }) => padding ?? "0"};
   width: ${({ width }) => width ?? "100%"};
   height: ${({ height }) => height ?? "100%"};
-  min-height: ${({ minHeight }) => minHeight ?? "100%"};
+  ${"" /* min-height: ${({ minHeight }) => minHeight ?? "100%"}; */}
   background: ${({ background }) => background ?? "none"};
   border-radius: ${({ borderRadius }) => borderRadius ?? "0"};
   box-shadow: ${({ theme, boxShadow }) =>
@@ -79,18 +79,24 @@ export const StyledForm = styled(Form)`
 `;
 
 export const Header = styled.h1`
-  font-size: ${({ theme }) => theme.fonts.xl};
+  font-size: ${({ theme }) => theme.fonts.xxl};
   margin: ${({ margin }) => margin ?? "0"};
   font-weight: bold;
 `;
 
 export const SubHeader = styled.h2`
-  font-size: ${({ theme }) => theme.fonts.lg};
+  font-size: ${({ theme }) => theme.fonts.xl};
   margin: ${({ margin }) => margin ?? "0"};
   font-weight: light;
 `;
 
 export const Title = styled.h3`
+  font-size: ${({ theme }) => theme.fonts.lg};
+  margin: ${({ margin }) => margin ?? "0"};
+  font-weight: light;
+`;
+
+export const Subtitle = styled.h5`
   font-size: ${({ theme }) => theme.fonts.md};
   margin: ${({ margin }) => margin ?? "0"};
   font-weight: light;
@@ -99,7 +105,14 @@ export const Title = styled.h3`
 export const Paragraph = styled.p`
   font-size: ${({ theme }) => theme.fonts.sm};
   margin: ${({ margin }) => margin ?? "0"};
-  font-weight: light;
+  color: ${({ color, theme }) => color ?? theme.colors.darkGray};
+  font-weight: lighter;
+`;
+
+export const Span = styled.span`
+  font-size: ${({ fontSize, theme }) => fontSize ?? theme.fonts.sm};
+  margin: ${({ margin }) => margin ?? "0"};
+  font-weight: lighter;
 `;
 
 export const Button = styled.button`
@@ -124,8 +137,8 @@ export const Image = styled.img`
       case "profile":
         return css`
           border-radius: 50%;
-          height: 5rem;
-          width: 5rem;
+          height: 3rem;
+          width: 3rem;
           background: blue;
         `;
       default:
@@ -136,3 +149,9 @@ export const Image = styled.img`
     }
   }}
 `;
+
+export const UnorderedList = styled.ul``;
+
+export const OrderedList = styled.ol``;
+
+export const List = styled.li``;

@@ -24,9 +24,10 @@ export const theme = {
 
   fonts: {
     sm: "0.8rem",
-    md: "1.4rem",
-    lg: "1.8rem",
-    xl: "2.4rem",
+    md: "1.2rem",
+    lg: "1.4rem",
+    xl: "1.8rem",
+    xxl: "2.4rem",
     paragraph: "1rem",
   },
 
