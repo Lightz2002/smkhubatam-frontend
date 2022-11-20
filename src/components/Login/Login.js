@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useMutation, useQuery } from "react-query";
-import { redirect, useLoaderData } from "react-router-dom";
-import { login, validateLogin } from "../../api/userApi";
+import { redirect } from "react-router-dom";
+import { login, initial } from "../../api/userApi";
 import { token, setToken, getToken } from "../../utilities/security";
 import { Flex, Container, Header, Title, Button } from "../styles/UI";
 import LoginForm from "./LoginForm";
@@ -10,7 +10,7 @@ export const authenticateQuery = () => ({
   queryKey: ["isAuthenticated"],
   queryFn: async () => {
     const localToken = getToken();
-    const loggedIn = await validateLogin(localToken);
+    const loggedIn = await initial(localToken);
     if (loggedIn) {
       return redirect("/dashboard");
     }
@@ -18,7 +18,6 @@ export const authenticateQuery = () => ({
   },
 });
 
-// ⬇️ define your query
 export const action =
   (queryClient) =>
   async ({ request, params }) => {
@@ -31,7 +30,7 @@ export const action =
 
       // if credentials are correct
       setToken(res.data.access_token);
-      localStorage.setItem("access_token", token);
+      localStorage.setItem("token", token);
       return redirect("/dashboard");
     } catch (e) {
       console.warn(e);
@@ -47,7 +46,7 @@ export const loader =
         queryClient.getQueryData(query) ?? (await queryClient.fetchQuery(query))
       );
     } catch (e) {
-      console.log(e);
+      return e;
     }
   };
 

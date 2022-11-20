@@ -7,12 +7,6 @@ const baseApi = axios.create({
 });
 
 // baseApi.defaults.headers.common["Authorization"] = AUTH_TOKEN;
-
-export const getUser = async () => {
-  const response = await baseApi.get("/users");
-  return response;
-};
-
 export const login = async (user) => {
   try {
     const response = await baseApi.post("/auth/login", {
@@ -27,15 +21,15 @@ export const login = async (user) => {
   }
 };
 
-export const validateLogin = async (token) => {
+export const initial = async (token) => {
   try {
-    token = token.trim(token.replace("Bearer ", ""));
-    console.log(token);
-    const response = await baseApi.get("/users", {
+    const response = await baseApi.get("/profile", {
       headers: {
         Authorization: token,
       },
     });
     return response;
-  } catch (e) {}
+  } catch (e) {
+    throw e;
+  }
 };
