@@ -9,17 +9,12 @@ import { QueryClient, QueryClientProvider } from "react-query";
 import router from "./routes/router.js";
 
 function App() {
-  async function getUsers() {
-    const data = await fetchapi("http://localhost:3000/users");
-    console.log(data);
-  }
-
   const queryClient = new QueryClient();
 
   return (
     <ThemeProvider theme={theme}>
       <QueryClientProvider client={queryClient}>
-        <Container className="App" height="100%" width="inherit">
+        <Container className="App" minHeight="100%" width="inherit">
           <RouterProvider router={router} />
         </Container>
       </QueryClientProvider>

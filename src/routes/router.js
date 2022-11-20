@@ -4,7 +4,9 @@ import Login, {
   loader as loginLoader,
   action as loginAction,
 } from "../components/Login/Login";
-import Dashboard from "../components/Dashboard/Dashboard";
+import Dashboard, {
+  loader as dashboardLoader,
+} from "../components/Dashboard/Dashboard";
 import { QueryClient } from "react-query";
 
 const queryClient = new QueryClient();
@@ -20,6 +22,7 @@ const router = createBrowserRouter([
   {
     path: "/dashboard",
     element: <Dashboard />,
+    loader: dashboardLoader(queryClient),
     errorElement: <ErrorPage />,
   },
 ]);
