@@ -8,22 +8,29 @@ import Dashboard, {
   loader as dashboardLoader,
 } from "../components/Dashboard/Dashboard";
 import { QueryClient } from "react-query";
+import UserList from "../components/User/UserList";
 
 const queryClient = new QueryClient();
 
 const router = createBrowserRouter([
   {
-    path: "/",
+    path: "/login",
     element: <Login />,
     action: loginAction(queryClient),
     loader: loginLoader(queryClient),
     errorElement: <ErrorPage />,
   },
   {
-    path: "/dashboard",
+    path: "/",
     element: <Dashboard />,
     loader: dashboardLoader(queryClient),
     errorElement: <ErrorPage />,
+    children: [
+      {
+        path: "users/",
+        element: <UserList />,
+      },
+    ],
   },
 ]);
 

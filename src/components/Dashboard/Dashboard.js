@@ -1,12 +1,15 @@
 import React from "react";
-import { Grid } from "../styles/UI";
+import { useQuery } from "react-query";
+import { theme } from "../../utilities/constant";
 import DashboardNavbar from "./DashboardNavbar";
 import DashboardSidebar from "./DashboardSidebar";
-import { theme } from "../../utilities/constant";
 import { getToken } from "../../utilities/security";
-import { Outlet, redirect } from "react-router";
+import { Outlet, redirect } from "react-router-dom";
 import { getUser, initial } from "../../api/userApi";
-import { useQuery } from "react-query";
+import { Box } from "@mui/system";
+import CssBaseline from "@mui/material/CssBaseline";
+import Typography from "@mui/material/Typography";
+import Toolbar from "@mui/material/Toolbar";
 
 export const initialQuery = () => ({
   queryKey: ["user"],
@@ -49,7 +52,7 @@ export const loader =
       );
     } catch (e) {
       const res = JSON.parse(JSON.stringify(e.response));
-      if (res.status === 401) return redirect("/");
+      if (res.status === 401) return redirect("/login");
     }
   };
 
@@ -64,13 +67,15 @@ const Dashboard = () => {
   const menus = [
     {
       id: 1,
-      name: "user",
-      path: "/user",
+      name: "User",
+      path: "/users",
+      icon: "FaBeer",
     },
     {
       id: 2,
-      name: "journal",
+      name: "Journal",
       path: "/journal",
+      icon: "FaBeer",
     },
   ];
 
@@ -83,17 +88,18 @@ const Dashboard = () => {
   }
 
   return (
-    <Grid column="15% 85%">
-      <DashboardNavbar user={user.data} className="navbar"></DashboardNavbar>
-      <DashboardSidebar
-        user={user.data}
-        menus={menus}
-        className="sidebar"
-      ></DashboardSidebar>
-      <div>
+    <Box sx={{ display: "flex" }}>
+      <CssBaseline />
+      <DashboardNavbar user={user.data} />
+      <DashboardSidebar user={user.data} menus={menus} />
+      <Box
+        component="main"
+        sx={{ flexGrow: 1, bgcolor: "background.default", p: 3 }}
+      >
+        <Toolbar />
         <Outlet />
-      </div>
-    </Grid>
+      </Box>
+    </Box>
   );
 };
 
