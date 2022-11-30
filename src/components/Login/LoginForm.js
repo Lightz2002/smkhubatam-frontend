@@ -1,7 +1,9 @@
 import React, { useState } from "react";
-import { Form } from "react-router-dom";
+// import { Form } from "react-router-dom";
 import { useQueryClient, useQuery, useMutation } from "react-query";
-import { Button, TextField } from "@mui/material";
+import FormGroup from "../Global/FormGroup";
+import { StyledForm } from "../styles/UI";
+import { authenticate, getUser } from "../../api/userApi";
 
 const LoginForm = ({
   forms,
@@ -11,36 +13,35 @@ const LoginForm = ({
   method = "post",
   action,
 }) => {
+  // Access the client
+  // const queryClient = useQueryClient();
+
+  // // Mutations
+  // const authenticateMutation = useMutation(authenticate, {
+  //   onSuccess: () => {
+  //     // Invalidate and refetch
+  //     queryClient.invalidateQueries("authenticate");
+  //   },
+  // });
+
   const inputChangeHandler = (input) => {
     setFormValue(input);
   };
 
   return (
-    <Form method={method} action={action}>
+    <StyledForm method={method} action={action}>
       {forms.map((form) => (
-        <TextField
-          // id={form.name}
+        <FormGroup
           key={form.name}
           name={form.name}
           placeholder={form.placeholder}
           value={form.value}
           label={form.label}
-          onChange={inputChangeHandler}
-          sx={{
-            mb: 2,
-            mr: 2,
-          }}
+          setFormValue={inputChangeHandler}
         />
       ))}
-      <Button
-        type="submit"
-        sx={{
-          display: "block",
-        }}
-      >
-        Login
-      </Button>
-    </Form>
+      {children}
+    </StyledForm>
   );
 };
 

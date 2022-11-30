@@ -1,11 +1,11 @@
 export const theme = {
   colors: {
     white: "#fff",
-    lightestGray: "#f7f8f8",
+    lightestGray: "#E6E7E7",
     midGray: "#808787",
     gray: "#B3B7B7",
     darkGray: "#333E3E",
-    lightestPrimary: "#e6f4f4",
+    lightestPrimary: "#D4F3FA",
     lightPrimary: "#B3DDDD",
     midPrimary: "007070",
     primary: "#008C8C",
@@ -23,9 +23,7 @@ export const theme = {
   },
 
   fonts: {
-    xs: "0.7rem",
     sm: "0.8rem",
-    list: "1rem",
     md: "1.2rem",
     lg: "1.4rem",
     xl: "1.8rem",

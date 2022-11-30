@@ -1,33 +1,15 @@
-import { Avatar, Button, Grid, Drawer, Toolbar, Divider } from "@mui/material";
-import { Box } from "@mui/system";
 import React from "react";
-import { RiLogoutCircleRLine } from "react-icons/ri";
-import DashboardSidebarList from "./DashboardSidebarList";
-import CssBaseline from "@mui/material/CssBaseline";
-import Typography from "@mui/material/Typography";
-import { FiBook } from "react-icons/fi";
+import { Container, Image } from "../styles/UI";
 
-const drawerWidth = 240;
-
-const DashboardSidebar = ({ menus, className }) => {
+const DashboardSidebar = ({ className }) => {
   return (
-    <Drawer
-      sx={{
-        width: drawerWidth,
-        flexShrink: 0,
-        "& .MuiDrawer-paper": {
-          width: drawerWidth,
-          boxSizing: "border-box",
-        },
-      }}
-      variant="permanent"
-      anchor="left"
-    >
-      <Toolbar />
-      <Divider />
-      <DashboardSidebarList menus={menus} />
-      <Divider />
-    </Drawer>
+    <Container className={className} padding="1rem 0">
+      <Image
+        src="https://images.ctfassets.net/hrltx12pl8hq/go6z2gBaTMDvTrtoOipOw/3b9d21ff7003ca392a2daeb569d629fc/shutterstock_1802211250.jpg?fit=fill&w=175&h=175&fm=webp"
+        $type="profile"
+        alt="test"
+      />
+    </Container>
   );
 };
 

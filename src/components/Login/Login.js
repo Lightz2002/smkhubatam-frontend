@@ -1,12 +1,10 @@
-import { Box } from "@mui/system";
-import Grid from "@mui/material/Grid";
 import React, { useState } from "react";
 import { useMutation, useQuery } from "react-query";
 import { redirect } from "react-router-dom";
 import { login, initial } from "../../api/userApi";
 import { token, setToken, getToken } from "../../utilities/security";
+import { Flex, Container, Header, Title, Button } from "../styles/UI";
 import LoginForm from "./LoginForm";
-import { Typography } from "@mui/material";
 
 export const authenticateQuery = () => ({
   queryKey: ["isAuthenticated"],
@@ -14,7 +12,7 @@ export const authenticateQuery = () => ({
     const localToken = getToken();
     const loggedIn = await initial(localToken);
     if (loggedIn) {
-      return redirect("/");
+      return redirect("/dashboard");
     }
     return loggedIn;
   },
@@ -32,9 +30,8 @@ export const action =
 
       // if credentials are correct
       setToken(res.data.access_token);
-      console.log("token");
       localStorage.setItem("token", token);
-      return redirect("/");
+      return redirect("/dashboard");
     } catch (e) {
       console.warn(e);
     }
@@ -109,61 +106,31 @@ const Login = () => {
   const formHandler = (input) => {
     setForms(
       forms.map((form) => {
-        if (form.name === input.target.name)
-          return {
-            ...form,
-            value: input.target.value,
-          };
+        if (form.name === input.name) return input;
         else return form;
       })
     );
   };
 
   return (
-    <Box
-      sx={{
-        position: "relative",
-        transform: "translateY(-50%)",
-        top: "50%",
-        height: "70%",
-        width: "60%",
-        boxShadow: 1,
-        padding: 0,
-        margin: "0 auto",
-      }}
+    <Flex
+      width="50%"
+      height="70%"
+      background="black"
+      borderRadius="6px"
+      boxShadow={true}
+      center={true}
     >
-      <Grid
-        container
-        sx={{
-          height: "100%",
-          width: "100%",
-        }}
-      >
-        <Grid
-          item
-          xs={3}
-          alignItems="center"
-          sx={{
-            background: "#aaa",
-            height: "100%",
-          }}
-        >
-          <Typography>SMK HU BATAM</Typography>
-        </Grid>
-        <Grid
-          item
-          xs={6}
-          sx={{
-            padding: "2rem",
-          }}
-        >
-          <Typography variant="h5" sx={{ mb: 5 }}>
-            Login
-          </Typography>
-          <LoginForm forms={forms} setFormValue={formHandler} action="/login" />
-        </Grid>
-      </Grid>
-    </Box>
+      <Flex background="#aaa" width="30%">
+        SMK HU BATAM
+      </Flex>
+      <Container background="#fff" width="70%" padding="1.5rem 2rem">
+        <Title margin="0 0 2rem">Log In</Title>
+        <LoginForm forms={forms} setFormValue={formHandler} action="/">
+          <Button margin="1rem 0 0">Login</Button>
+        </LoginForm>
+      </Container>
+    </Flex>
   );
 };
 

@@ -1,4 +1,3 @@
-import { FormControl, FormLabel } from "@mui/material";
 import React from "react";
 import { useState, useEffect } from "react";
 
@@ -13,9 +12,8 @@ const FormGroup = ({ name, type, label, placeholder, value, setFormValue }) => {
   };
 
   return (
-    <FormControl>
-      <FormLabel>{label}</FormLabel>
-      {/* <label htmlFor={name}>{label}</label> */}
+    <div className="form-group">
+      <label htmlFor={name}>{label}</label>
       <input
         name={name}
         id={name}
@@ -24,7 +22,7 @@ const FormGroup = ({ name, type, label, placeholder, value, setFormValue }) => {
         placeholder={placeholder}
         onChange={onChangeHandler}
       />
-    </FormControl>
+    </div>
   );
 };
 
