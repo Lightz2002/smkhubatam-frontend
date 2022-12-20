@@ -1,5 +1,6 @@
 import { createBrowserRouter } from "react-router-dom";
 import ErrorPage from "../not-found-page";
+import { QueryClient } from "react-query";
 import Login, {
   loader as loginLoader,
   action as loginAction,
@@ -7,8 +8,11 @@ import Login, {
 import Dashboard, {
   loader as dashboardLoader,
 } from "../components/Dashboard/Dashboard";
-import { QueryClient } from "react-query";
-import UserList from "../components/User/UserList";
+import UserList, {
+  loader as userLoader,
+  action as userAction,
+} from "../components/User/UserList";
+import JournalList from "../components/Journal/JournalList";
 
 const queryClient = new QueryClient();
 
@@ -29,6 +33,12 @@ const router = createBrowserRouter([
       {
         path: "users/",
         element: <UserList />,
+        loader: userLoader(queryClient),
+        action: userAction(queryClient),
+      },
+      {
+        path: "journal/",
+        element: <JournalList />,
       },
     ],
   },

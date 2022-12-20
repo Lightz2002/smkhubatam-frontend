@@ -3,44 +3,26 @@ import { useQuery } from "react-query";
 import { theme } from "../../utilities/constant";
 import DashboardNavbar from "./DashboardNavbar";
 import DashboardSidebar from "./DashboardSidebar";
-import { getToken } from "../../utilities/security";
 import { Outlet, redirect } from "react-router-dom";
-import { getUser, initial } from "../../api/userApi";
-import { Box } from "@mui/system";
 import CssBaseline from "@mui/material/CssBaseline";
-import Typography from "@mui/material/Typography";
-import Toolbar from "@mui/material/Toolbar";
+import { Box, Toolbar } from "@mui/material";
+import { getMenusByRoleQuery, initialQuery } from "../../api/queries";
+import { setToken } from "../../utilities/security";
+import { logout } from "../../api/userApi";
 
-export const initialQuery = () => ({
-  queryKey: ["user"],
-  queryFn: async () => {
-    const localToken = getToken();
-    const user = await initial(localToken);
-    if (!user) {
+export const action =
+  (queryClient) =>
+  async ({ request, params }) => {
+    try {
+      queryClient.invalidateQueries(["isAuthenticated"]);
+      const res = await logout();
+      // if credentials are correct
+      setToken("");
       return redirect("/");
+    } catch (e) {
+      console.warn(e);
     }
-    return user;
-  },
-});
-
-// export const action =
-//   (queryClient) =>
-//   async ({ request, params }) => {
-//     try {
-//       const formData = await request.formData();
-//       const credentials = Object.fromEntries(formData);
-//       queryClient.invalidateQueries(["isAuthenticated"]);
-//       const res = await login(credentials);
-//       if (res.statusCode === 401) return;
-
-//       // if credentials are correct
-//       setToken(res.data.access_token);
-//       localStorage.setItem("access_token", token);
-//       return redirect("/dashboard");
-//     } catch (e) {
-//       console.warn(e);
-//     }
-//   };
+  };
 
 export const loader =
   (queryClient) =>
@@ -64,20 +46,7 @@ const Dashboard = () => {
     isError,
   } = useQuery(initialQuery());
 
-  const menus = [
-    {
-      id: 1,
-      name: "User",
-      path: "/users",
-      icon: "FaBeer",
-    },
-    {
-      id: 2,
-      name: "Journal",
-      path: "/journal",
-      icon: "FaBeer",
-    },
-  ];
+  const { data: menus } = useQuery(getMenusByRoleQuery());
 
   if (isLoading) {
     return "Loading...";
@@ -88,13 +57,13 @@ const Dashboard = () => {
   }
 
   return (
-    <Box sx={{ display: "flex" }}>
+    <Box sx={{ display: "flex", height: "100%" }}>
       <CssBaseline />
-      <DashboardNavbar user={user.data} />
+      <DashboardNavbar user={user.data} logout={action} />
       <DashboardSidebar user={user.data} menus={menus} />
       <Box
         component="main"
-        sx={{ flexGrow: 1, bgcolor: "background.default", p: 3 }}
+        sx={{ flexGrow: 1, bgcolor: "#f7f8f8", p: 3, position: "relative" }}
       >
         <Toolbar />
         <Outlet />

@@ -7,24 +7,14 @@ import {
   ListItemIcon,
   ListItemText,
 } from "@mui/material";
-import { makeStyles } from "@mui/styles";
 import { NavLink } from "react-router-dom";
 
 const DashboardSidebarListItem = ({ menu }) => {
-  const useStyles = makeStyles({
-    active: {
-      backgroundColor: "yellow",
-      color: "black",
-    },
-  });
-
-  const classes = useStyles();
-
   return (
     <NavLink
       to={menu.path}
-      className={({ isActive, isPending }) =>
-        isActive ? "active" : isPending ? "pending" : ""
+      className={({ isActive }) =>
+        isActive ? "active-navbar" : "bg-red-500 font-thin"
       }
     >
       <ListItem key={menu.key} disablePadding>

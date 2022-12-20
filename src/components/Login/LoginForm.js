@@ -10,13 +10,14 @@ const LoginForm = ({
   setFormValue,
   method = "post",
   action,
+  handleSubmit,
 }) => {
   const inputChangeHandler = (input) => {
     setFormValue(input);
   };
 
   return (
-    <Form method={method} action={action}>
+    <Form method={method} action={action} onSubmit={handleSubmit}>
       {forms.map((form) => (
         <TextField
           // id={form.name}

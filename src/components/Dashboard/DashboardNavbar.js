@@ -1,4 +1,4 @@
-import { Box, Grid, Typography, Avatar } from "@mui/material";
+import { Box, Grid, Typography, Avatar, Button } from "@mui/material";
 import { typography } from "@mui/system";
 import React from "react";
 import { theme } from "../../utilities/constant";
@@ -7,7 +7,7 @@ import Toolbar from "@mui/material/Toolbar";
 
 const drawerWidth = 240;
 
-const DashboardNavbar = ({ user, className }) => {
+const DashboardNavbar = ({ user, className, logout }) => {
   return (
     <AppBar
       position="fixed"
@@ -27,6 +27,15 @@ const DashboardNavbar = ({ user, className }) => {
           <Typography>Welcome Back, {user.Name}</Typography>
           <Typography variant="body1">{user.Role.Name}</Typography>
         </Typography>
+        <Button
+          sx={{
+            color: "white",
+            ml: "auto",
+          }}
+          onClick={logout}
+        >
+          Logout
+        </Button>
       </Toolbar>
     </AppBar>
   );

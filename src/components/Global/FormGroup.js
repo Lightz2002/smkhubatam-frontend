@@ -1,31 +1,89 @@
-import { FormControl, FormLabel } from "@mui/material";
+import {
+  Autocomplete,
+  FormControl,
+  FormControlLabel,
+  FormLabel,
+  Radio,
+  RadioGroup,
+  TextField,
+  Box,
+} from "@mui/material";
 import React from "react";
-import { useState, useEffect } from "react";
 
-const FormGroup = ({ name, type, label, placeholder, value, setFormValue }) => {
-  const onChangeHandler = (e) => {
-    setFormValue({
-      name: e.target.name,
-      value: e.target.value,
-      type: e.target.type,
-      label: label,
-    });
-  };
+const FormGroup = (props) => {
+  const { form, inputChangeHandler } = props;
+  let result = "";
 
-  return (
-    <FormControl>
-      <FormLabel>{label}</FormLabel>
-      {/* <label htmlFor={name}>{label}</label> */}
-      <input
-        name={name}
-        id={name}
-        type={type}
-        value={value}
-        placeholder={placeholder}
-        onChange={onChangeHandler}
-      />
-    </FormControl>
-  );
+  switch (form.type) {
+    case "autocomplete":
+      result = (
+        <Autocomplete
+          autoHighlight
+          id="combo-box-demo"
+          options={form.options}
+          sx={{ width: 300 }}
+          getOptionLabel={(option) => option.label || ""}
+          isOptionEqualToValue={(option, value) => option.id === value.id}
+          renderOption={(props, option) => (
+            <Box component="li" {...props} value={option.id}>
+              {option.label || ""}
+            </Box>
+          )}
+          renderInput={(params) => <TextField {...params} name={form.name} />}
+          onChange={inputChangeHandler}
+          value={form.selectedValue}
+        />
+      );
+      break;
+
+    case "radio":
+      result = (
+        <FormControl>
+          <FormLabel id="demo-row-radio-buttons-group-label">
+            {form.name}
+          </FormLabel>
+          <RadioGroup
+            row
+            aria-labelledby="demo-row-radio-buttons-group-label"
+            name={form.name}
+            value={form.selectedValue}
+            onChange={inputChangeHandler}
+          >
+            {form.options.map((radio) => (
+              <FormControlLabel
+                key={radio.value}
+                value={radio.value}
+                label={radio.label}
+                control={<Radio />}
+              />
+            ))}
+          </RadioGroup>
+        </FormControl>
+      );
+      break;
+
+    case "text":
+    case "number":
+    case "password":
+    default:
+      result = (
+        <TextField
+          type={form.type}
+          name={form.name}
+          placeholder={form.placeholder}
+          value={form.value}
+          label={form.label}
+          onChange={inputChangeHandler}
+          sx={{
+            mb: 2,
+            mr: 2,
+          }}
+        />
+      );
+      break;
+  }
+
+  return result;
 };
 
 export default FormGroup;

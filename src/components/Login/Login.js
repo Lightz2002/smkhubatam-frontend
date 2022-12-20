@@ -1,24 +1,12 @@
 import { Box } from "@mui/system";
 import Grid from "@mui/material/Grid";
 import React, { useState } from "react";
-import { useMutation, useQuery } from "react-query";
 import { redirect } from "react-router-dom";
-import { login, initial } from "../../api/userApi";
-import { token, setToken, getToken } from "../../utilities/security";
+import { login } from "../../api/userApi";
+import { token, setToken } from "../../utilities/security";
 import LoginForm from "./LoginForm";
 import { Typography } from "@mui/material";
-
-export const authenticateQuery = () => ({
-  queryKey: ["isAuthenticated"],
-  queryFn: async () => {
-    const localToken = getToken();
-    const loggedIn = await initial(localToken);
-    if (loggedIn) {
-      return redirect("/");
-    }
-    return loggedIn;
-  },
-});
+import { authenticateQuery } from "../../api/queries";
 
 export const action =
   (queryClient) =>
@@ -32,7 +20,6 @@ export const action =
 
       // if credentials are correct
       setToken(res.data.access_token);
-      console.log("token");
       localStorage.setItem("token", token);
       return redirect("/");
     } catch (e) {
@@ -109,12 +96,22 @@ const Login = () => {
   const formHandler = (input) => {
     setForms(
       forms.map((form) => {
-        if (form.name === input.target.name)
-          return {
-            ...form,
-            value: input.target.value,
-          };
-        else return form;
+        if (form.name !== input.target.name) return form;
+        return {
+          ...form,
+          value: input.target.value,
+        };
+      })
+    );
+  };
+
+  const handleSubmit = (input) => {
+    setForms(
+      forms.map((form) => {
+        return {
+          ...form,
+          value: "",
+        };
       })
     );
   };
@@ -160,7 +157,12 @@ const Login = () => {
           <Typography variant="h5" sx={{ mb: 5 }}>
             Login
           </Typography>
-          <LoginForm forms={forms} setFormValue={formHandler} action="/login" />
+          <LoginForm
+            forms={forms}
+            setFormValue={formHandler}
+            handleSubmit={handleSubmit}
+            action="/login"
+          />
         </Grid>
       </Grid>
     </Box>
