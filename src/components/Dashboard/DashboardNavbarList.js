@@ -1,8 +1,7 @@
 import React from "react";
-import { Container } from "../styles/UI";
 
 const DashboardNavbarList = () => {
-  return <Container>DashboardNavbarList</Container>;
+  return <div>DashboardNavbarList</div>;
 };
 
 export default DashboardNavbarList;
