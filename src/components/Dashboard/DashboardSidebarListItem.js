@@ -1,7 +1,6 @@
 import React from "react";
 import { FiBook } from "react-icons/fi";
 import {
-  Link,
   ListItem,
   ListItemButton,
   ListItemIcon,

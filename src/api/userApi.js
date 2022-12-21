@@ -1,6 +1,5 @@
 import axios from "axios";
-import { redirect, useNavigate } from "react-router-dom";
-import { token, setToken, getToken } from "../utilities/security";
+import { getToken } from "../utilities/security";
 
 const baseApi = axios.create({
   baseURL: "http://localhost:3030",
@@ -26,11 +25,11 @@ export const logout = async (user) => {
   } catch (e) {}
 };
 
-export const initial = async (token) => {
+export const initial = async () => {
   try {
     const response = await baseApi.get("/profile", {
       headers: {
-        Authorization: token,
+        Authorization: getToken(),
       },
     });
     return response;

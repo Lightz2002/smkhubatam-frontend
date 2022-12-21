@@ -1,13 +1,5 @@
 import AddIcon from "@mui/icons-material/Add";
-import {
-  Grid,
-  Typography,
-  Box,
-  Fab,
-  Modal,
-  TextField,
-  Button,
-} from "@mui/material";
+import { Grid, Typography, Box, Fab } from "@mui/material";
 import * as React from "react";
 import { useState } from "react";
 import { useQuery } from "react-query";
@@ -51,9 +43,7 @@ const UserList = () => {
   const {
     data: users,
     isLoading,
-    isSuccess,
     isError,
-    refetch,
   } = useQuery(getUsersQuery(), {
     staleTime: 0,
     cacheTime: 0,
@@ -160,6 +150,10 @@ const UserList = () => {
 
   if (isLoading) {
     return "Loading...";
+  }
+
+  if (isError) {
+    return "Somehing went wrong, Error";
   }
 
   if (openModal) {

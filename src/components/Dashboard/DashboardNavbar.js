@@ -1,13 +1,11 @@
-import { Box, Grid, Typography, Avatar, Button } from "@mui/material";
-import { typography } from "@mui/system";
+import { Typography, Avatar, Button } from "@mui/material";
 import React from "react";
-import { theme } from "../../utilities/constant";
 import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
 
 const drawerWidth = 240;
 
-const DashboardNavbar = ({ user, className, logout }) => {
+const DashboardNavbar = ({ user, logout }) => {
   return (
     <AppBar
       position="fixed"

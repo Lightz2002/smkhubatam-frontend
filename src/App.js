@@ -1,11 +1,8 @@
 import "./App.css";
-import Login from "./components/Login/Login";
-import { ThemeProvider, createTheme, Container, Box } from "@mui/material";
-import { fetchapi } from "./utilities/helper";
-import { RouterProvider, Route } from "react-router-dom";
+import { ThemeProvider, createTheme, Box } from "@mui/material";
+import { RouterProvider } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "react-query";
 import router from "./routes/router.js";
-import { blue } from "@mui/material/colors";
 
 function App() {
   const queryClient = new QueryClient();

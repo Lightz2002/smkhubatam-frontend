@@ -6,7 +6,7 @@ import { login } from "../../api/userApi";
 import { token, setToken } from "../../utilities/security";
 import LoginForm from "./LoginForm";
 import { Typography } from "@mui/material";
-import { authenticateQuery } from "../../api/queries";
+import { initialQuery } from "../../api/queries";
 
 export const action =
   (queryClient) =>
@@ -14,7 +14,7 @@ export const action =
     try {
       const formData = await request.formData();
       const credentials = Object.fromEntries(formData);
-      queryClient.invalidateQueries(["isAuthenticated"]);
+      queryClient.invalidateQueries(["user"]);
       const res = await login(credentials);
       if (res.statusCode === 401) return;
 
@@ -31,7 +31,7 @@ export const loader =
   (queryClient) =>
   async ({ request, params }) => {
     try {
-      const query = authenticateQuery();
+      const query = initialQuery();
       return (
         queryClient.getQueryData(query) ?? (await queryClient.fetchQuery(query))
       );

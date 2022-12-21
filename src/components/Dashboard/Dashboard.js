@@ -1,12 +1,11 @@
 import React from "react";
 import { useQuery } from "react-query";
-import { theme } from "../../utilities/constant";
 import DashboardNavbar from "./DashboardNavbar";
 import DashboardSidebar from "./DashboardSidebar";
 import { Outlet, redirect } from "react-router-dom";
 import CssBaseline from "@mui/material/CssBaseline";
 import { Box, Toolbar } from "@mui/material";
-import { getMenusByRoleQuery, initialQuery } from "../../api/queries";
+import { initialQuery } from "../../api/queries";
 import { setToken } from "../../utilities/security";
 import { logout } from "../../api/userApi";
 
@@ -16,6 +15,7 @@ export const action =
     try {
       queryClient.invalidateQueries(["isAuthenticated"]);
       const res = await logout();
+      console.log(res);
       // if credentials are correct
       setToken("");
       return redirect("/");
@@ -39,14 +39,22 @@ export const loader =
   };
 
 const Dashboard = () => {
-  const {
-    data: user,
-    isLoading,
-    isSuccess,
-    isError,
-  } = useQuery(initialQuery());
-
-  const { data: menus } = useQuery(getMenusByRoleQuery());
+  const { data: user, isLoading, isError } = useQuery(initialQuery());
+  const menus = [
+    {
+      id: 1,
+      name: "User",
+      path: "/users",
+      icon: "FaBeer",
+    },
+    {
+      id: 2,
+      name: "Journal",
+      path: "/journal",
+      icon: "FaBeer",
+    },
+  ];
+  // const { data: menus } = useQuery(getMenusByRoleQuery());
 
   if (isLoading) {
     return "Loading...";

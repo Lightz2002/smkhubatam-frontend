@@ -1,11 +1,6 @@
-import { Avatar, Button, Grid, Drawer, Toolbar, Divider } from "@mui/material";
-import { Box } from "@mui/system";
+import { Drawer, Toolbar, Divider } from "@mui/material";
 import React from "react";
-import { RiLogoutCircleRLine } from "react-icons/ri";
 import DashboardSidebarList from "./DashboardSidebarList";
-import CssBaseline from "@mui/material/CssBaseline";
-import Typography from "@mui/material/Typography";
-import { FiBook } from "react-icons/fi";
 
 const drawerWidth = 240;
 

@@ -1,30 +1,10 @@
-import {
-  getUsers,
-  createUser,
-  getRoles,
-  initial,
-  getMenusByRole,
-} from "./userApi";
-import { token, setToken, getToken } from "../utilities/security";
+import { getUsers, getRoles, initial, getMenusByRole } from "./userApi";
 import { redirect } from "react-router-dom";
-
-export const authenticateQuery = () => ({
-  queryKey: ["isAuthenticated"],
-  queryFn: async () => {
-    const localToken = getToken();
-    const loggedIn = await initial(localToken);
-    if (loggedIn) {
-      return redirect("/");
-    }
-    return loggedIn;
-  },
-});
 
 export const initialQuery = () => ({
   queryKey: ["user"],
   queryFn: async () => {
-    const localToken = getToken();
-    const user = await initial(localToken);
+    const user = await initial();
     if (!user) {
       return redirect("/");
     }
