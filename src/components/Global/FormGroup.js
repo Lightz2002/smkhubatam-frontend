@@ -19,9 +19,9 @@ const FormGroup = (props) => {
       result = (
         <Autocomplete
           autoHighlight
-          id="combo-box-demo"
+          id="disable-clearable"
+          disableClearable
           options={form.options}
-          sx={{ width: 300 }}
           getOptionLabel={(option) => option.label || ""}
           isOptionEqualToValue={(option, value) => option.id === value.id}
           renderOption={(props, option) => (
@@ -55,6 +55,7 @@ const FormGroup = (props) => {
                 value={radio.value}
                 label={radio.label}
                 control={<Radio />}
+                checked={form.selectedValue === radio.value ? "checked" : ""}
               />
             ))}
           </RadioGroup>
