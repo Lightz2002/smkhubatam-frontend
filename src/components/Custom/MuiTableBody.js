@@ -3,16 +3,16 @@ import TableRow from "@mui/material/TableRow";
 import Checkbox from "@mui/material/Checkbox";
 import { getComparator, stableSort } from "../../utilities/helper";
 import { TableBody } from "@mui/material";
+import MuiTableRow from "./MuiTableRow";
 
 export function MuiTableBody(props) {
   const {
     rows,
-    setOrderBy,
+    columns,
     order,
     orderBy,
     page,
     rowsPerPage,
-    rowsPerPageOptions,
     handleClick,
     isSelected,
     emptyRows,
@@ -50,10 +50,10 @@ export function MuiTableBody(props) {
               <TableCell component="th" id={labelId} scope="row" padding="none">
                 {row.name}
               </TableCell>
-              <TableCell align="right">{row.calories}</TableCell>
-              <TableCell align="right">{row.fat}</TableCell>
-              <TableCell align="right">{row.carbs}</TableCell>
-              <TableCell align="right">{row.protein}</TableCell>
+              {/* loop the columns and call table row */}
+              {columns.map((column) => {
+                return <MuiTableRow key={column} value={row[column]} />;
+              })}
             </TableRow>
           );
         })}

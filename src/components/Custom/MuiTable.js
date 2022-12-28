@@ -11,7 +11,7 @@ import { MuiTablePagination } from "./MuiTablePagination";
 import { MuiTableBody } from "./MuiTableBody";
 
 export default function MuiTable(props) {
-  const { title, header, rows } = props;
+  const { title, header, rows, columns } = props;
   const [order, setOrder] = React.useState("asc");
   const [orderBy, setOrderBy] = React.useState("calories");
   const [selected, setSelected] = React.useState([]);
@@ -94,6 +94,7 @@ export default function MuiTable(props) {
             />
             <MuiTableBody
               rows={rows}
+              columns={columns}
               order={order}
               orderBy={orderBy}
               page={page}
