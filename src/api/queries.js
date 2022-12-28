@@ -1,4 +1,11 @@
-import { getUsers, getRoles, initial, getMenusByRole } from "./userApi";
+import {
+  getUsers,
+  getUser,
+  getRoles,
+  initial,
+  getMenusByRole,
+  getLocations,
+} from "./userApi";
 import { redirect } from "react-router-dom";
 
 export const initialQuery = () => ({
@@ -16,31 +23,51 @@ export const getUsersQuery = () => ({
   queryKey: ["users"],
   queryFn: async () => {
     const users = await getUsers();
-    // if (!users) {
-    //   return redirect("/");
-    // }
     return users;
   },
+});
+
+export const getUserQuery = (userId) => ({
+  queryKey: ["user", userId],
+  queryFn: async () => {
+    const user = await getUser(userId);
+    return user;
+  },
+  enabled: !!userId,
 });
 
 export const getRolesQuery = () => ({
   queryKey: ["roles"],
   queryFn: async () => {
     const roles = await getRoles();
-    // if (!users) {
-    //   return redirect("/");
-    // }
     return roles;
   },
 });
 
-export const getMenusByRoleQuery = () => ({
-  queryKey: ["menus"],
+export const getMenusByRoleQuery = (roleId) => ({
+  queryKey: ["menus", roleId],
   queryFn: async () => {
-    const menus = await getMenusByRole();
-    // if (!users) {
-    //   return redirect("/");
-    // }
+    const menus = await getMenusByRole(roleId);
     return menus;
   },
+  enabled: !!roleId,
+});
+
+/* Location */
+export const getLocationsQuery = () => ({
+  queryKey: ["locations"],
+  queryFn: async () => {
+    const locations = await getLocations();
+    return locations;
+  },
+});
+
+export const getLocationQuery = (locationId) => ({
+  queryKey: ["location", locationId],
+  queryFn: async () => {
+    console.log(locationId);
+    const user = await getUser(locationId);
+    return user;
+  },
+  enabled: !!locationId,
 });

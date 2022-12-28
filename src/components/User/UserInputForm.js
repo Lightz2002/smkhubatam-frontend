@@ -1,12 +1,16 @@
 import React from "react";
-import { Typography, Box, Button } from "@mui/material";
+import { Typography, Grid, Button } from "@mui/material";
 import FormGroup from "../Global/FormGroup";
 import { Form } from "react-router-dom";
 
 const UserInputForm = (props) => {
-  const { userForms, inputChangeHandler } = props;
+  const { userForms, userId, inputChangeHandler } = props;
   return (
-    <Form className="modal-form" method="post" action="/users">
+    <Form
+      className="modal-form"
+      method={userId ? "PUT" : "POST"}
+      action={userId ? `/student/${userId}` : "/student"}
+    >
       <Typography
         id="modal-modal-title"
         variant="h6"
@@ -15,17 +19,15 @@ const UserInputForm = (props) => {
           mb: 2,
         }}
       >
-        Create User
+        {userId ? "Edit User" : "Create User"}
       </Typography>
-      <Box>
+      <Grid container>
         {userForms.map((form) => (
-          <FormGroup
-            key={form.name}
-            form={form}
-            inputChangeHandler={inputChangeHandler}
-          />
+          <Grid key={form.name} xs={form.column}>
+            <FormGroup form={form} inputChangeHandler={inputChangeHandler} />
+          </Grid>
         ))}
-      </Box>
+      </Grid>
       <Button
         type="submit"
         variant="contained"

@@ -6,7 +6,7 @@ const DashboardSidebarList = ({ menus }) => {
   return (
     <List>
       {menus.map((menu) => (
-        <DashboardSidebarListItem key={menu.id} menu={menu} />
+        <DashboardSidebarListItem key={menu.Id} menu={menu} />
       ))}
     </List>
   );

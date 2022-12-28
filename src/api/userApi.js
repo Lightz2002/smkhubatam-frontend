@@ -20,14 +20,34 @@ export const login = async (user) => {
   }
 };
 
-export const logout = async (user) => {
+export const logout = async () => {
   try {
+    const response = await baseApi.post("/logout", {
+      headers: {
+        Authorization: getToken(),
+      },
+    });
+    return response;
   } catch (e) {}
 };
 
 export const initial = async () => {
   try {
     const response = await baseApi.get("/profile", {
+      headers: {
+        Authorization: getToken(),
+      },
+    });
+    return response;
+  } catch (e) {
+    throw e;
+  }
+};
+
+/* User */
+export const getUser = async (id) => {
+  try {
+    const response = await baseApi.get(`/users/${id}`, {
       headers: {
         Authorization: getToken(),
       },
@@ -74,6 +94,29 @@ export const createUser = async (user) => {
   }
 };
 
+export const updateUser = async (user, studentId) => {
+  try {
+    const response = await baseApi.put(
+      `/users/${studentId}`,
+      {
+        ...user,
+        validateStatus: function (status) {
+          return status === 201;
+        },
+      },
+      {
+        headers: {
+          Authorization: getToken(),
+        },
+      }
+    );
+    return response;
+  } catch (e) {
+    throw e;
+  }
+};
+
+/* Role */
 export const getRoles = async () => {
   try {
     const response = await baseApi.get("/roles", {
@@ -89,7 +132,7 @@ export const getRoles = async () => {
 
 export const getMenusByRole = async (role) => {
   try {
-    const response = await baseApi.get(`/roles/${role}`, {
+    const response = await baseApi.get(`/roles/rolemenu?role=${role}`, {
       headers: {
         Authorization: getToken(),
       },
@@ -99,3 +142,43 @@ export const getMenusByRole = async (role) => {
     throw e;
   }
 };
+
+/* Location */
+export const getLocations = async () => {
+  try {
+    const response = await baseApi.get("/locations", {
+      headers: {
+        Authorization: getToken(),
+      },
+    });
+    return response;
+  } catch (e) {
+    throw e;
+  }
+};
+
+export const createLocation = async (location) => {
+  try {
+    const response = await baseApi.post(
+      "/locations",
+      {
+        ...location,
+        validateStatus: function (status) {
+          return status === 201;
+        },
+      },
+      {
+        headers: {
+          Authorization: getToken(),
+        },
+      }
+    );
+    return response;
+  } catch (e) {
+    console.log(e);
+    throw e;
+  }
+};
+
+/* Internship */
+/* Journal */

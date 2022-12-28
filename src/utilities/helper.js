@@ -39,13 +39,15 @@ export const InputChangeHandler = (input, forms, setForms) => {
   setForms(
     forms.map((form) => {
       if (input.target.role === "option") {
-        return {
-          ...form,
-          selectedValue: {
-            label: input.target.textContent,
-            id: +input.target.value,
-          },
-        };
+        if (form.type === "autocomplete") {
+          return {
+            ...form,
+            selectedValue: {
+              label: input.target.textContent,
+              id: +input.target.value,
+            },
+          };
+        }
       }
       if (form.name !== input.target.name) return form;
 

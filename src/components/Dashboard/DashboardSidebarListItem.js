@@ -21,7 +21,7 @@ const DashboardSidebarListItem = ({ menu }) => {
           <ListItemIcon>
             {menu.key % 2 === 0 ? <FiBook /> : <FiBook />}
           </ListItemIcon>
-          <ListItemText primary={menu.name} />
+          <ListItemText primary={menu.Name} />
         </ListItemButton>
       </ListItem>
     </NavLink>

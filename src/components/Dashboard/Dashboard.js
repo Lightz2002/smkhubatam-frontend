@@ -2,23 +2,23 @@ import React from "react";
 import { useQuery } from "react-query";
 import DashboardNavbar from "./DashboardNavbar";
 import DashboardSidebar from "./DashboardSidebar";
-import { Outlet, redirect } from "react-router-dom";
+import { Outlet, redirect, useLoaderData } from "react-router-dom";
 import CssBaseline from "@mui/material/CssBaseline";
 import { Box, Toolbar } from "@mui/material";
-import { initialQuery } from "../../api/queries";
+import { initialQuery, getMenusByRoleQuery } from "../../api/queries";
 import { setToken } from "../../utilities/security";
-import { logout } from "../../api/userApi";
+import { getMenusByRole, logout } from "../../api/userApi";
+import { useEffect } from "react";
 
 export const action =
   (queryClient) =>
   async ({ request, params }) => {
     try {
-      queryClient.invalidateQueries(["isAuthenticated"]);
-      const res = await logout();
-      console.log(res);
+      console.log(1);
       // if credentials are correct
+      localStorage.setItem("token", "");
       setToken("");
-      return redirect("/");
+      return redirect("/login");
     } catch (e) {
       console.warn(e);
     }
@@ -29,9 +29,17 @@ export const loader =
   async ({ request, params }) => {
     try {
       const query = initialQuery();
-      return (
-        queryClient.getQueryData(query) ?? (await queryClient.fetchQuery(query))
-      );
+      const user =
+        queryClient.getQueryData(query) ??
+        (await queryClient.fetchQuery(query));
+      const roleId = user?.data.Role?.Id;
+      const query2 = getMenusByRoleQuery(roleId);
+
+      const menus =
+        queryClient.getQueryData(query2) ??
+        (await queryClient.fetchQuery(query2));
+
+      return { user: user, menus: menus };
     } catch (e) {
       const res = JSON.parse(JSON.stringify(e.response));
       if (res.status === 401) return redirect("/login");
@@ -39,36 +47,23 @@ export const loader =
   };
 
 const Dashboard = () => {
-  const { data: user, isLoading, isError } = useQuery(initialQuery());
-  const menus = [
-    {
-      id: 1,
-      name: "User",
-      path: "/users",
-      icon: "FaBeer",
-    },
-    {
-      id: 2,
-      name: "Journal",
-      path: "/journal",
-      icon: "FaBeer",
-    },
-  ];
-  // const { data: menus } = useQuery(getMenusByRoleQuery());
+  const { user, menus } = useLoaderData();
 
-  if (isLoading) {
-    return "Loading...";
-  }
+  // const handleLogout = () => {
+  //   const logoutValue = "";
+  //   localStorage.setItem("token", logoutValue);
+  //   setToken(logoutValue);
+  // }
 
-  if (isError) {
-    return "Error";
+  for (let menu of menus.data) {
+    menu.path = "/" + menu.Name.toLowerCase();
   }
 
   return (
     <Box sx={{ display: "flex", height: "100%" }}>
       <CssBaseline />
-      <DashboardNavbar user={user.data} logout={action} />
-      <DashboardSidebar user={user.data} menus={menus} />
+      <DashboardNavbar user={user.data} logout="/" />
+      <DashboardSidebar user={user.data} menus={menus.data} />
       <Box
         component="main"
         sx={{ flexGrow: 1, bgcolor: "#f7f8f8", p: 3, position: "relative" }}

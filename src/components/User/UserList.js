@@ -1,13 +1,14 @@
 import AddIcon from "@mui/icons-material/Add";
 import { Grid, Typography, Box, Fab } from "@mui/material";
 import * as React from "react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useQuery } from "react-query";
 import { InputChangeHandler } from "../../utilities/helper";
 import UserInputModal from "./UserInputModal";
-import { createUser } from "../../api/userApi";
+import { createUser, updateUser, getUser } from "../../api/userApi";
 import UserListItem from "./UserListItem";
-import { getUsersQuery, getRolesQuery } from "../../api/queries";
+import { getUsersQuery, getUserQuery, getRolesQuery } from "../../api/queries";
+import { useActionData } from "react-router";
 
 export const action =
   (queryClient) =>
@@ -15,11 +16,16 @@ export const action =
     try {
       const formData = await request.formData();
       const inputs = Object.fromEntries(formData);
-      // queryClient.invalidateQueries(["roles"]);
-      const res = await createUser(inputs);
+      queryClient.invalidateQueries(["roles"]);
+
+      let res = null;
+      if (!!params.studentId) {
+        res = await updateUser(inputs, params.studentId);
+      } else {
+        res = await createUser(inputs);
+      }
       if (res.statusCode === 401) return;
       return res;
-      // if credentials are correct
     } catch (e) {
       console.warn(e);
     }
@@ -40,6 +46,18 @@ export const loader =
   };
 
 const UserList = () => {
+  const [userId, setUserId] = useState(null);
+  const [openModal, setOpenModal] = useState(false);
+  const [modalIsEdit, setModalIsEdit] = useState(false);
+
+  // const {
+  //   data: user,
+  //   error,
+  //   isLoading: userIsLoading,
+  //   status,
+  // } = useQuery(getUserQuery(userId, showUser));
+
+  const res = useActionData();
   const {
     data: users,
     isLoading,
@@ -54,10 +72,11 @@ const UserList = () => {
 
   let role = roles?.data ?? [];
 
-  const [userForms, setUserForms] = useState([
+  const defaultForm = [
     {
       name: "Name",
       label: "Name",
+      column: 4,
       type: "text",
       value: "",
       validation: "required",
@@ -66,6 +85,7 @@ const UserList = () => {
       name: "Username",
       label: "Username",
       type: "text",
+      column: 4,
       value: "",
       validation: "required",
     },
@@ -73,6 +93,7 @@ const UserList = () => {
       name: "Password",
       label: "Password",
       type: "password",
+      column: 4,
       value: "",
       validation: "required",
     },
@@ -80,6 +101,7 @@ const UserList = () => {
       name: "Gender",
       label: "Gender",
       type: "radio",
+      column: 4,
       selectedValue: "Female",
       validation: "required",
       options: [
@@ -101,6 +123,7 @@ const UserList = () => {
       name: "Age",
       label: "Age",
       type: "number",
+      column: 4,
       value: "",
       validation: "required",
     },
@@ -108,45 +131,94 @@ const UserList = () => {
       name: "YearEntered",
       label: "YearEntered",
       type: "number",
+      column: 4,
       value: "",
     },
     {
       name: "Role",
       label: "Role",
       type: "autocomplete",
+      column: 12,
       selectedValue: role[0],
       options: role,
     },
-  ]);
+  ];
+  const [userForms, setUserForms] = useState(defaultForm);
 
-  const [openModal, setOpenModal] = useState(false);
+  useEffect(() => {
+    if (res && res.status === 201) {
+      setOpenModal(false);
+      setModalIsEdit(false);
+    }
+  }, [res]);
 
-  const toggleModal = (modal) => {
+  const toggleModal = (modal, forms = null, userId = null) => {
     setOpenModal((prevState) => !modal);
+    setUserId(userId);
     if (role) {
-      role = role.map((item) => {
-        return {
-          id: item.Id,
-          label: item.Code,
-        };
-      });
-      setUserForms((prevForms) => {
-        return prevForms.map((prevForm) => {
-          if (prevForm.name !== "Role") return prevForm;
+      if (forms === null) {
+        role = role.map((item) => {
           return {
-            ...prevForm,
-            selectedValue: role[0],
-            options: role,
+            id: item.Id,
+            label: item.Code,
           };
         });
-      });
+        setUserForms(() => {
+          return defaultForm.map((prevForm) => {
+            if (prevForm.name !== "Role") return prevForm;
+            return {
+              ...prevForm,
+              selectedValue: role[0],
+              options: role,
+            };
+          });
+        });
+      } else {
+        return forms;
+      }
     }
   };
 
   const userInputChangeHandler = (input) =>
     InputChangeHandler(input, userForms, setUserForms);
 
-  const showUser = (e, id) => {};
+  function showUser(e, id) {
+    const user = users?.data.filter((user) => user.Id === id)[0];
+    setUserForms((prevForms) => {
+      const forms = prevForms
+        .map((prevForm) => {
+          switch (prevForm.type) {
+            case "autocomplete":
+              const formattedRole = role.map((item) => {
+                return {
+                  id: item.Id,
+                  label: item.Code,
+                };
+              });
+
+              return {
+                ...prevForm,
+                selectedValue: {
+                  id: user.Role.Id,
+                  label: user.Role.Code,
+                },
+                options: formattedRole,
+              };
+
+            case "text":
+            default:
+              return {
+                ...prevForm,
+                value: user[prevForm.name],
+              };
+          }
+        })
+        .filter((curForm) => curForm.name !== "Password");
+
+      return forms;
+    });
+    toggleModal(openModal, userForms, id);
+  }
 
   if (isLoading) {
     return "Loading...";
@@ -161,6 +233,7 @@ const UserList = () => {
       <UserInputModal
         userForms={userForms}
         openModal={openModal}
+        userId={userId}
         toggleModal={toggleModal}
         inputChangeHandler={userInputChangeHandler}
       />
@@ -168,11 +241,17 @@ const UserList = () => {
   }
 
   return (
-    <Box>
+    <Box
+      sx={{
+        position: "relative",
+        overflow: "auto",
+      }}
+    >
       <Typography
         variant="h4"
         sx={{
           mb: 4,
+          overflow: "auto",
           position: "relative",
         }}
       >
@@ -180,7 +259,7 @@ const UserList = () => {
       </Typography>
       <Grid container spacing={2}>
         {users.data.map((user) => (
-          <UserListItem key={user.id} user={user} showUser={showUser} />
+          <UserListItem key={user.Id} user={user} showUser={showUser} />
         ))}
       </Grid>
       <Fab

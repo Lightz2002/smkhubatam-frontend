@@ -1,4 +1,6 @@
 import { Typography, Avatar, Button } from "@mui/material";
+import { Form } from "react-router-dom";
+
 import React from "react";
 import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
@@ -25,15 +27,16 @@ const DashboardNavbar = ({ user, logout }) => {
           <Typography>Welcome Back, {user.Name}</Typography>
           <Typography variant="body1">{user.Role.Name}</Typography>
         </Typography>
-        <Button
-          sx={{
-            color: "white",
-            ml: "auto",
-          }}
-          onClick={logout}
-        >
-          Logout
-        </Button>
+        <Form method="post" action={logout} className="logout-form">
+          <Button
+            type="submit"
+            sx={{
+              color: "white",
+            }}
+          >
+            Logout
+          </Button>
+        </Form>
       </Toolbar>
     </AppBar>
   );
