@@ -7,12 +7,17 @@ import Login, {
 } from "../components/Login/Login";
 import Dashboard, {
   loader as dashboardLoader,
+  action as dashboardAction,
 } from "../components/Dashboard/Dashboard";
 import UserList, {
   loader as userLoader,
   action as userAction,
 } from "../components/User/UserList";
 import JournalList from "../components/Journal/JournalList";
+import LocationList, {
+  loader as locationLoader,
+  action as locationAction,
+} from "../components/Location/LocationList";
 
 const queryClient = new QueryClient();
 
@@ -27,11 +32,18 @@ const router = createBrowserRouter([
   {
     path: "/",
     element: <Dashboard />,
+    action: dashboardAction(queryClient),
     loader: dashboardLoader(queryClient),
     errorElement: <ErrorPage />,
     children: [
       {
-        path: "users/",
+        path: "student/",
+        element: <UserList />,
+        loader: userLoader(queryClient),
+        action: userAction(queryClient),
+      },
+      {
+        path: "student/:studentId",
         element: <UserList />,
         loader: userLoader(queryClient),
         action: userAction(queryClient),
@@ -39,6 +51,12 @@ const router = createBrowserRouter([
       {
         path: "journal/",
         element: <JournalList />,
+      },
+      {
+        path: "location/",
+        element: <LocationList />,
+        loader: locationLoader(queryClient),
+        action: locationAction(queryClient),
       },
     ],
   },
