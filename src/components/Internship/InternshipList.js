@@ -1,8 +1,8 @@
 import React from "react";
 import MuiTable from "../Custom/MuiTable";
 
-const JournalList = () => {
-  const tableTitle = "Journal List";
+const InternshipList = () => {
+  const tableTitle = "Internship List";
   const headCells = [
     {
       id: "name",
@@ -141,4 +141,4 @@ const JournalList = () => {
   );
 };
 
-export default JournalList;
+export default InternshipList;

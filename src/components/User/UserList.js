@@ -62,6 +62,7 @@ const UserList = () => {
     data: users,
     isLoading,
     isError,
+    refetch,
   } = useQuery(getUsersQuery(), {
     staleTime: 0,
     cacheTime: 0,
@@ -149,8 +150,9 @@ const UserList = () => {
     if (res && res.status === 201) {
       setOpenModal(false);
       setModalIsEdit(false);
+      refetch();
     }
-  }, [res]);
+  }, [res, refetch]);
 
   const toggleModal = (modal, forms = null, userId = null) => {
     setOpenModal((prevState) => !modal);
@@ -217,7 +219,7 @@ const UserList = () => {
 
       return forms;
     });
-    toggleModal(openModal, userForms, id);
+    setTimeout(toggleModal(openModal, userForms, id), 1000);
   }
 
   if (isLoading) {

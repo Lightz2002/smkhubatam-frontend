@@ -27,13 +27,16 @@ export const getUsersQuery = () => ({
   },
 });
 
-export const getUserQuery = (userId) => ({
+export const getUserQuery = (userId, callback) => ({
   queryKey: ["user", userId],
   queryFn: async () => {
     const user = await getUser(userId);
     return user;
   },
   enabled: !!userId,
+  // onSuccess: () => {
+  //   callback
+  // }
 });
 
 export const getRolesQuery = () => ({
