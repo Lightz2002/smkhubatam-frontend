@@ -4,35 +4,35 @@ import { useQueryClient, useQuery, useMutation } from "react-query";
 import { Button, TextField } from "@mui/material";
 
 const LoginForm = ({
-  forms,
-  children,
-  submitHandler,
-  setFormValue,
+  credentials,
+  handlePasswordChange,
+  handleUsernameChange,
   method = "post",
   action,
   handleSubmit,
 }) => {
-  const inputChangeHandler = (input) => {
-    setFormValue(input);
-  };
-
   return (
     <Form method={method} action={action} onSubmit={handleSubmit}>
-      {forms.map((form) => (
-        <TextField
-          // id={form.name}
-          key={form.name}
-          name={form.name}
-          placeholder={form.placeholder}
-          value={form.value}
-          label={form.label}
-          onChange={inputChangeHandler}
-          sx={{
-            mb: 2,
-            mr: 2,
-          }}
-        />
-      ))}
+      <TextField
+        id="Username"
+        name="Username"
+        label="Username"
+        variant="outlined"
+        value={credentials.Username}
+        onChange={handleUsernameChange}
+        margin="normal"
+      />
+      <TextField
+        id="Password"
+        name="Password"
+        label="Password"
+        type="password"
+        variant="outlined"
+        value={credentials.Password}
+        onChange={handlePasswordChange}
+        margin="normal"
+      />
+
       <Button
         type="submit"
         sx={{

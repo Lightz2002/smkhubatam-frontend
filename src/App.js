@@ -3,15 +3,16 @@ import { ThemeProvider, createTheme, Box } from "@mui/material";
 import { RouterProvider } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "react-query";
 import router from "./routes/router.js";
+import { blue } from "@mui/material/colors";
 
 function App() {
   const queryClient = new QueryClient();
   const theme = createTheme({
-    // palette: {
-    //   primary: {
-    //     main: blue[50],
-    //   },
-    // },
+    palette: {
+      primary: {
+        main: blue[50],
+      },
+    },
   });
 
   return (

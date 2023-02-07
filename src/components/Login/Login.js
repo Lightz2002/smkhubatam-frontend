@@ -7,6 +7,7 @@ import { token, setToken } from "../../utilities/security";
 import LoginForm from "./LoginForm";
 import { Typography } from "@mui/material";
 import { initialQuery } from "../../api/queries";
+import { useTheme } from "@emotion/react";
 
 export const action =
   (queryClient) =>
@@ -41,79 +42,34 @@ export const loader =
   };
 
 const Login = () => {
-  const [forms, setForms] = useState([
-    {
-      name: "Username",
-      label: "Username",
-      type: "text",
-      value: "",
-    },
-    {
-      name: "Password",
-      label: "Password",
-      type: "password",
-      value: "",
-    },
-  ]);
+  const theme = useTheme();
+  const [user, setUser] = useState({
+    Username: "",
+    Password: "",
+  });
 
-  // const isAuthenticated = useLoaderData();
-  // const mutation = useMutation((user) => authenticate(user));
-  // if (isAuthenticated) {
-  //   return redirect("/dashboard");
-  // }
-
-  // const {
-  //   isLoading,
-  //   isError,
-  //   data: authenticated,
-  //   error,
-  // } = useQuery("authenticated", authenticate);
-
-  // if (mutation.isSuccess) {
-  //   return redirect("/dashboard");
-  // }
-
-  // const loginHandler = async (e) => {
-  //   /*
-  //   objectives: submit form, check if authenticated, redirect to dashboard
-  //   steps:
-  //   1. create state and handler for form submitting
-  //   2. if not authenticated,
-  //     show a modal with error credentials error
-  //   3. else
-  //     save the user state
-  //     save the login token in localstorage
-  //     redirect to dashboard
-  //   */
-  //   e.preventDefault();
-  //   let credentials = {};
-  //   credentials.Username = forms[0].value;
-  //   credentials.Password = forms[1].value;
-  //   // setUser(credentials);
-  //   // mutation.mutate(credentials);
-  // };
-
-  const formHandler = (input) => {
-    setForms(
-      forms.map((form) => {
-        if (form.name !== input.target.name) return form;
-        return {
-          ...form,
-          value: input.target.value,
-        };
-      })
-    );
+  const handleUsernameChange = (e) => {
+    setUser((user) => {
+      return {
+        ...user,
+        Username: e.target.value,
+      };
+    });
+  };
+  const handlePasswordChange = (e) => {
+    setUser((user) => {
+      return {
+        ...user,
+        Password: e.target.value,
+      };
+    });
   };
 
   const handleSubmit = (input) => {
-    setForms(
-      forms.map((form) => {
-        return {
-          ...form,
-          value: "",
-        };
-      })
-    );
+    setUser({
+      Username: "",
+      Password: "",
+    });
   };
 
   return (
@@ -141,7 +97,7 @@ const Login = () => {
           xs={3}
           alignItems="center"
           sx={{
-            background: "#aaa",
+            background: theme.palette.primary.main,
             height: "100%",
           }}
         >
@@ -158,8 +114,9 @@ const Login = () => {
             Login
           </Typography>
           <LoginForm
-            forms={forms}
-            setFormValue={formHandler}
+            credentials={user}
+            handleUsernameChange={handleUsernameChange}
+            handlePasswordChange={handlePasswordChange}
             handleSubmit={handleSubmit}
             action="/login"
           />
