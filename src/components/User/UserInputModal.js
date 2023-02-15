@@ -3,8 +3,14 @@ import { Modal } from "@mui/material";
 import UserInputForm from "./UserInputForm";
 
 const UserInputModal = (props) => {
-  const { openModal, userId, toggleModal, userForms, inputChangeHandler } =
-    props;
+  const {
+    openModal,
+    userId,
+    toggleModal,
+    userForms,
+    role,
+    inputChangeHandler,
+  } = props;
   return (
     <Modal
       open={openModal}
@@ -14,6 +20,7 @@ const UserInputModal = (props) => {
       sx={{
         width: "50%",
         m: "0 auto",
+        // pb: 3,
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
@@ -23,6 +30,7 @@ const UserInputModal = (props) => {
         userForms={userForms}
         userId={userId}
         inputChangeHandler={inputChangeHandler}
+        role={role}
       />
     </Modal>
   );

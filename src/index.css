@@ -47,8 +47,8 @@ a {
 .modal-form {
   background-color: white;
   padding: 2rem;
-  height: 80%;
-  width: 100%;
+  margin: 2rem;
+  width: 70%;
   display: block;
   overflow: auto;
 }
