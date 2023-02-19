@@ -1,4 +1,4 @@
-import React from "react";
+import React, { forwardRef, useRef } from "react";
 import {
   Autocomplete,
   Button,
@@ -14,13 +14,26 @@ import {
 // import FormGroup from "../Global/FormGroup";
 import { Form } from "react-router-dom";
 
-const UserInputForm = (props) => {
-  const { userForms, userId, inputChangeHandler, role } = props;
+const UserInputForm = forwardRef((props, ref) => {
+  const {
+    userForms,
+    userId,
+    inputChangeHandler,
+    role,
+    handleFormData,
+    roleInputValue,
+    setRoleInputValue,
+    setRoleValue,
+    roleValue,
+  } = props;
+
+  const myAutocompleteRef = useRef(null);
   return (
     <Form
       className="modal-form"
       method={userId ? "PUT" : "POST"}
       action={userId ? `/student/${userId}` : "/student"}
+      ref={ref}
     >
       <Typography
         id="modal-modal-title"
@@ -72,7 +85,7 @@ const UserInputForm = (props) => {
             type="number"
             variant="outlined"
             value={userForms.Age}
-            onChange={inputChangeHandler}
+            onChange={(e) => inputChangeHandler(e, "number")}
             sx={{ width: "100%", height: "50px" }}
           />
         </Grid>
@@ -110,14 +123,24 @@ const UserInputForm = (props) => {
         </Grid>
         <Grid item xs={12}>
           <Autocomplete
-            disablePortal
-            id="combo-box-demo"
-            name="Role"
+            id="role-combo"
+            idval={userForms.Role}
+            // name="Role"
+            // inputRef={myAutocompleteRef}
+            value={
+              role.find(
+                (option) => option.Id === (userForms.Role ?? role[0].Id)
+              ) || null
+            }
+            onChange={(e, newValue) => {
+              inputChangeHandler(e, "role", newValue);
+            }}
             options={role}
-            sx={{ width: 300 }}
+            sx={{ width: "100%" }}
             getOptionLabel={(option) => option.Name ?? null}
-            renderInput={(params) => <TextField {...params} label="Movie" />}
-            onChange={inputChangeHandler}
+            renderInput={(params) => (
+              <TextField {...params} id="roleInput" label="Role" name="Role" />
+            )}
           />
         </Grid>
       </Grid>
@@ -134,6 +157,6 @@ const UserInputForm = (props) => {
       </Button>
     </Form>
   );
-};
+});
 
 export default UserInputForm;

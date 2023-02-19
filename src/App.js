@@ -12,9 +12,17 @@ function App() {
       primary: {
         main: "#439A97",
       },
-      warning: {
+      error: {
         main: "#d32f2f",
-        dark: "#c62828",
+      },
+      warning: {
+        main: "#ed6c02",
+      },
+      info: {
+        main: "#0288d1",
+      },
+      success: {
+        main: "#2e7d32",
       },
     },
   });

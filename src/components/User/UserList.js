@@ -1,13 +1,13 @@
 import AddIcon from "@mui/icons-material/Add";
 import { Grid, Typography, Box, Fab } from "@mui/material";
 import * as React from "react";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useReducer } from "react";
 import { useQuery } from "react-query";
 import UserInputModal from "./UserInputModal";
 import { createUser, updateUser } from "../../api/userApi";
 import UserListItem from "./UserListItem";
 import { getUsersQuery, getRolesQuery } from "../../api/queries";
-import { useActionData } from "react-router";
+import { useActionData, useLoaderData } from "react-router";
 
 export const action =
   (queryClient) =>
@@ -15,8 +15,13 @@ export const action =
     try {
       const formData = await request.formData();
       const inputs = Object.fromEntries(formData);
+      const roleIdVal = document
+        .querySelector("#role-combo")
+        .getAttribute("idval");
+      inputs.Role = roleIdVal;
+      console.log(inputs);
+      // console.log(inputs);
       queryClient.invalidateQueries(["roles"]);
-
       let res = null;
       if (!!params.studentId) {
         res = await updateUser(inputs, params.studentId);
@@ -35,10 +40,14 @@ export const loader =
   async ({ request, params }) => {
     try {
       const query = getUsersQuery();
-      console.log(query);
-      return (
-        queryClient.getQueryData(query) ?? (await queryClient.fetchQuery(query))
-      );
+      const query2 = getRolesQuery();
+
+      return [
+        queryClient.getQueryData(query) ??
+          (await queryClient.fetchQuery(query)),
+        queryClient.getQueryData(query2) ??
+          (await queryClient.fetchQuery(query2)),
+      ];
     } catch (e) {
       console.log(e);
       // const res = JSON.parse(JSON.stringify(e.response));
@@ -47,11 +56,46 @@ export const loader =
   };
 
 const UserList = () => {
+  const data = useLoaderData();
+  const res = useActionData();
+  const [role, setRole] = useState([]);
   const [userId, setUserId] = useState(null);
   const [openModal, setOpenModal] = useState(false);
   const [modalIsEdit, setModalIsEdit] = useState(false);
+  const initialFormData = {
+    Username: "",
+    Name: "",
+    Password: "",
+    Gender: "",
+    Age: "",
+    YearEntered: "",
+    Role: role[0],
+  };
+  const [userForms, setUserForms] = useReducer(
+    formDataReducer,
+    initialFormData
+  );
 
-  const res = useActionData();
+  useEffect(() => {
+    if (res && res.status === 201) {
+      setOpenModal(false);
+    }
+    if (data) {
+      setRole(data[1].data);
+    }
+    if (userForms.Role) {
+      const btn = document.querySelector("#role-combo");
+      btn.setAttribute("idval", userForms.Role);
+    }
+  }, [res, data, userForms.Role]);
+
+  function formDataReducer(state, action) {
+    return {
+      ...state,
+      ...action,
+    };
+  }
+
   const {
     data: users,
     isLoading,
@@ -63,47 +107,41 @@ const UserList = () => {
     refetchInterval: 0,
   });
 
-  const { data: roles } = useQuery(getRolesQuery());
-
-  let role = roles?.data ?? [];
-
-  const defaultForm = {
-    Username: "",
-    Name: "",
-    Password: "",
-    Gender: "",
-    Age: "",
-    YearEntered: "",
-    Role: "",
-  };
-  const [userForms, setUserForms] = useState(defaultForm);
-
-  useEffect(() => {
-    if (res && res.status === 201) {
-      setOpenModal(false);
-      // setModalIsEdit(false);
-      // refetch();
-    }
-  }, [res]);
-
-  const toggleModal = (modal, forms = null, userId = null) => {
-    setOpenModal((prevState) => !prevState);
+  function toggleModal(isOpenModal, forms = null, userId = null) {
+    setOpenModal(isOpenModal);
     setUserId(userId);
-    if (role) {
-      console.log(role);
-    } else {
-      console.log(2);
-      return forms;
+  }
+
+  const userInputChangeHandler = (
+    input,
+    type = "text",
+    autoComplete = { Id: null, Name: null }
+  ) => {
+    const { target, keyCode } = input;
+    const { value, name } = target;
+    switch (type.toLowerCase()) {
+      case "number":
+        if (isNaN(value) || keyCode === 69) return;
+        setUserForms({ [name]: value });
+        break;
+      case "role":
+        setUserForms({ Role: autoComplete?.Id ?? role[0]?.Id });
+        break;
+      case "text":
+      default:
+        setUserForms({ [name]: value });
+        break;
     }
   };
-  const userInputChangeHandler = (input) => {
-    console.log(2);
-    setUserForms((userForm) => {
-      return {
-        ...userForm,
-        [input.target.name]: input.target.value,
-      };
-    });
+
+  // function handleRoleInput(e, newValue) {
+  //   setRoleInputValue(e.target.value);
+  // }
+
+  const handleFormData = (e) => {
+    console.log(document.getElementById("roleInput"));
+    const formData = e.originalEvent.FormData;
+    formData.set("Role", userForms.Role);
   };
 
   function showUser(e, id) {
@@ -161,6 +199,7 @@ const UserList = () => {
         toggleModal={toggleModal}
         inputChangeHandler={userInputChangeHandler}
         role={role}
+        handleFormData={handleFormData}
       />
     );
   }
@@ -195,7 +234,7 @@ const UserList = () => {
           bottom: 20,
           right: 20,
         }}
-        onClick={() => toggleModal(openModal)}
+        onClick={() => toggleModal(true)}
       >
         <AddIcon />
       </Fab>
