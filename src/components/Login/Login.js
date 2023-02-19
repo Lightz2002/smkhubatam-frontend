@@ -1,11 +1,11 @@
 import { Box } from "@mui/system";
 import Grid from "@mui/material/Grid";
 import React, { useState } from "react";
-import { redirect } from "react-router-dom";
+import { redirect, useActionData } from "react-router-dom";
 import { login } from "../../api/userApi";
 import { token, setToken } from "../../utilities/security";
 import LoginForm from "./LoginForm";
-import { Typography } from "@mui/material";
+import { Typography, Alert } from "@mui/material";
 import { initialQuery } from "../../api/queries";
 import { useTheme } from "@emotion/react";
 
@@ -17,14 +17,13 @@ export const action =
       const credentials = Object.fromEntries(formData);
       queryClient.invalidateQueries(["user"]);
       const res = await login(credentials);
-      if (res.statusCode === 401) return;
 
       // if credentials are correct
       setToken(res.data.access_token);
       localStorage.setItem("token", token);
       return redirect("/");
     } catch (e) {
-      console.warn(e);
+      return e;
     }
   };
 
@@ -42,6 +41,7 @@ export const loader =
   };
 
 const Login = () => {
+  const errors = useActionData();
   const theme = useTheme();
   const [user, setUser] = useState({
     Username: "",
@@ -62,13 +62,6 @@ const Login = () => {
         ...user,
         Password: e.target.value,
       };
-    });
-  };
-
-  const handleSubmit = (input) => {
-    setUser({
-      Username: "",
-      Password: "",
     });
   };
 
@@ -115,11 +108,14 @@ const Login = () => {
           <Typography variant="h5" sx={{ mb: 5 }}>
             Login
           </Typography>
+          {errors && (
+            <Alert severity="warning">{errors && errors?.message}</Alert>
+          )}
           <LoginForm
             credentials={user}
             handleUsernameChange={handleUsernameChange}
             handlePasswordChange={handlePasswordChange}
-            handleSubmit={handleSubmit}
+            errors={errors}
             action="/login"
           />
         </Grid>
