@@ -1,4 +1,4 @@
-import React, { forwardRef, useRef } from "react";
+import React, { forwardRef } from "react";
 import {
   Autocomplete,
   Button,
@@ -15,19 +15,8 @@ import {
 import { Form } from "react-router-dom";
 
 const UserInputForm = forwardRef((props, ref) => {
-  const {
-    userForms,
-    userId,
-    inputChangeHandler,
-    role,
-    handleFormData,
-    roleInputValue,
-    setRoleInputValue,
-    setRoleValue,
-    roleValue,
-  } = props;
+  const { userForms, userId, inputChangeHandler, role } = props;
 
-  const myAutocompleteRef = useRef(null);
   return (
     <Form
       className="modal-form"

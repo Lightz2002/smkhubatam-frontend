@@ -14,7 +14,7 @@ const UserInputModal = (props) => {
   return (
     <Modal
       open={openModal}
-      onClose={toggleModal}
+      onClose={(e) => toggleModal(false)}
       aria-labelledby="modal-modal-title"
       aria-describedby="modal-modal-description"
       sx={{

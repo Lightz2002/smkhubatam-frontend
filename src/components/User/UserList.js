@@ -108,8 +108,9 @@ const UserList = () => {
   });
 
   function toggleModal(isOpenModal, forms = null, userId = null) {
-    setOpenModal(isOpenModal);
+    setOpenModal((prevIsOpenModal) => isOpenModal);
     setUserId(userId);
+    return isOpenModal;
   }
 
   const userInputChangeHandler = (
