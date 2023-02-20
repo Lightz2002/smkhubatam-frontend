@@ -11,8 +11,12 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-// import FormGroup from "../Global/FormGroup";
-import { Form } from "react-router-dom";
+import { Form as RouterForm } from "react-router-dom";
+import styled from "@emotion/styled";
+
+const Form = styled(RouterForm)({
+  width: "80%",
+});
 
 const UserInputForm = forwardRef((props, ref) => {
   const { userForms, userId, inputChangeHandler, role } = props;

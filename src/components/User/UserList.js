@@ -8,6 +8,8 @@ import { createUser, updateUser } from "../../api/userApi";
 import UserListItem from "./UserListItem";
 import { getUsersQuery, getRolesQuery } from "../../api/queries";
 import { useActionData, useLoaderData } from "react-router";
+import { Link as RouterLink } from "react-router-dom";
+import styled from "@emotion/styled";
 
 export const action =
   (queryClient) =>
@@ -55,6 +57,13 @@ export const loader =
     }
   };
 
+const Link = styled(RouterLink)({
+  color: "red",
+  position: "absolute",
+  bottom: 20,
+  right: 20,
+});
+
 const UserList = () => {
   const data = useLoaderData();
   const res = useActionData();
@@ -81,6 +90,7 @@ const UserList = () => {
       setOpenModal(false);
     }
     if (data) {
+      console.log(data);
       setRole(data[1].data);
     }
     if (userForms.Role) {
@@ -227,18 +237,9 @@ const UserList = () => {
           <UserListItem key={user.Id} user={user} showUser={showUser} />
         ))}
       </Grid>
-      <Fab
-        color="primary"
-        aria-label="add"
-        sx={{
-          position: "absolute",
-          bottom: 20,
-          right: 20,
-        }}
-        onClick={() => toggleModal(true)}
-      >
+      <Link to="./add">
         <AddIcon />
-      </Fab>
+      </Link>
     </Box>
   );
 };

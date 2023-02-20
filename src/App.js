@@ -33,7 +33,7 @@ function App() {
         <Box
           className="App"
           sx={{
-            height: "100%",
+            minHeight: "100vh",
           }}
         >
           <RouterProvider router={router} />

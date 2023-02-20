@@ -9,6 +9,7 @@ import Dashboard, {
   loader as dashboardLoader,
   action as dashboardAction,
 } from "../components/Dashboard/Dashboard";
+import UserAdd, { loader as addUserLoader } from "../components/User/UserAdd";
 import UserList, {
   loader as userLoader,
   action as userAction,
@@ -43,11 +44,16 @@ const router = createBrowserRouter([
         action: userAction(queryClient),
       },
       {
-        path: "student/:studentId",
-        element: <UserList />,
-        loader: userLoader(queryClient),
-        action: userAction(queryClient),
+        path: "student/add",
+        element: <UserAdd />,
+        loader: addUserLoader(queryClient),
       },
+      // {
+      //   path: "student/edit/:studentId",
+      //   element: <UserList />,
+      //   loader: userLoader(queryClient),
+      //   action: userAction(queryClient),
+      // },
       {
         path: "journal/",
         element: <JournalList />,

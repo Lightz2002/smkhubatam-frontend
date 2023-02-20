@@ -13,6 +13,7 @@ const LoginForm = ({
   return (
     <Form method={method} action={action}>
       <TextField
+        required
         id="Username"
         name="Username"
         label="Username"
@@ -23,6 +24,7 @@ const LoginForm = ({
         sx={{ width: "100%" }}
       />
       <TextField
+        required
         id="Password"
         name="Password"
         label="Password"
